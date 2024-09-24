@@ -13,6 +13,7 @@ def test_valid_procfile():
     lines = loads('\n'.join([
         'web: bundle exec rails server -p $PORT',
         'worker: env QUEUE=* bundle exec rake resque:work',
+        'worker-migration: env QUEUE=* BROKER_URL=sqs:///?region=us-east-2&queue_name_prefix=worker bundle exec rake resque:work',
         'urgentworker: env QUEUE=urgent FOO=meh bundle exec rake resque:work',
     ]))
     assert lines == {
@@ -25,6 +26,13 @@ def test_valid_procfile():
             'env': {
                 'QUEUE': '*',
             },
+        },
+        'worker-migration': {
+            'cmd': 'bundle exec rake resque:work',
+            'env': {
+                'QUEUE': '*',
+                'BROKER_URL': 'sqs:///?region=us-east-2&queue_name_prefix=worker',
+            }
         },
         'urgentworker': {
             'cmd': 'bundle exec rake resque:work',

@@ -55,7 +55,7 @@ def _parse_procfile_line(line):
     environment = parts['environment']
     if environment:
         environment = [
-            tuple(variable.strip().split('='))
+            tuple(variable.strip().split('=', 1))
             for variable in environment.strip().split(' ')
         ]
     else:
