@@ -15,6 +15,7 @@ def test_valid_procfile():
         'worker: env QUEUE=* bundle exec rake resque:work',
         'worker-migration: env QUEUE=* BROKER_URL=sqs:///?region=us-east-2&queue_name_prefix=worker bundle exec rake resque:work',
         'urgentworker: env QUEUE=urgent FOO=meh bundle exec rake resque:work',
+        'workerwithenvincommand: env QUEUE=urgent FOO=meh bundle exec rake --concurrency=${RESQUE_CONCURRENCY:-1} resque:work'
     ]))
     assert lines == {
         'web': {
@@ -36,6 +37,13 @@ def test_valid_procfile():
         },
         'urgentworker': {
             'cmd': 'bundle exec rake resque:work',
+            'env': {
+                'QUEUE': 'urgent',
+                'FOO': 'meh',
+            },
+        },
+        'workerwithenvincommand': {
+            'cmd': 'bundle exec rake --concurrency=${RESQUE_CONCURRENCY:-1} resque:work',
             'env': {
                 'QUEUE': 'urgent',
                 'FOO': 'meh',

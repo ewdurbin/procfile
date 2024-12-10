@@ -13,7 +13,7 @@ from collections import namedtuple
 _PROCFILE_LINE = re.compile(
     ''.join([
         r'^(?P<process_type>.+?):\s*',
-        r'(?:env(?P<environment>(?:\s+.+?=.+?)+)\s+)?',
+        r'(?:env(?P<environment>(?:\s+\S+=\S+)+)\s+)?',
         r'(?P<command>.+)$',
     ])
 )
